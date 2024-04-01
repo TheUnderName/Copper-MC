@@ -14,6 +14,7 @@ class OfflineMessage {
     private var RakNetMagic:String;
     private var magicsubs:Bytes;
     private var guidsubs:Bytes;
+    private var timeorginal:Int64;
     public function new(buf:Bytes) {
         this.buf = buf;
         Packet = new PacketSender();
@@ -25,10 +26,10 @@ class OfflineMessage {
         timeinput.bigEndian = true;
         var time_high = timeinput.readInt32();
         var time_low = timeinput.readInt32();
-        var timeorginal:Int64 = Int64.make(time_high,time_low);
+        timeorginal = Int64.make(time_high,time_low);
         Logger.Debug("Time: " + timeorginal);
         // RakNet Magic
-        magicsubs = timeinput.read(15);
+        magicsubs = timeinput.read(16);
         RakNetMagic = magicsubs.toHex();
         Logger.Debug("RakNet Magic: " + RakNetMagic);
         // Client guid
@@ -46,8 +47,9 @@ class OfflineMessage {
         output.writeByte(0x1c);
         // // client time
         output.bigEndian = true;
-        var timesubss:Bytes = buf.sub(1,8);
-        output.writeBytes(timesubss,0,timesubss.length);
+        var client_time:Int64 = timeorginal;
+        output.writeInt32(client_time.high);
+        output.writeInt32(client_time.low);
         // // // server guid
         output.bigEndian = true;
         var serverguid:Int64 = 254556555;
@@ -55,15 +57,13 @@ class OfflineMessage {
         output.writeInt32(serverguid.low);
         // // // magic
         output.bigEndian = false;
-        output.writeBytes(magicsubs,0,magicsubs.length);
+        output.write(magicsubs);
         //server string
         output.bigEndian = true;
         var motd:Int = ServerMOTD.length;
         output.writeUInt16(motd);
-        var motdd:Bytes = Bytes.ofString(ServerMOTD,UTF8);
-        output.writeBytes(motdd,0,motdd.length);
+        output.writeString(ServerMOTD,UTF8);
         data = output.getBytes();        
-        Logger.Debug(data.toHex());
         return Packet.SendPacket(data,0,data.length);
     }
     

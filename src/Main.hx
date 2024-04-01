@@ -7,5 +7,4 @@ class Main {
     var myServer:Server = new Server("Copper MC", "127.0.0.1", 19132);
     myServer.Start();
   }
-
 }
