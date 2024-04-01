@@ -12,6 +12,8 @@
 
 This project is a server software for Minecraft Bedrock Edition.
 
+telegram - https://t.me/CopperServer
+
 ## Functionality:
 * protocol raknet [40%]
 * protocol game [0%]
