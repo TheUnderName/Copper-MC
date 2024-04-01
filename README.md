@@ -19,7 +19,7 @@ Telegram https://t.me/CopperServer
 * protocol game [0%]
 
 ## Issues
-See the [open issues](https://github.com/TheUnderName/Copper-MC/) for a list of proposed features (and known issues).
+See the [open issues](https://github.com/TheUnderName/Copper-MC/issues) for a list of proposed features (and known issues).
 
 ### Creating A Pull Request
 
