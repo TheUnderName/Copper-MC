@@ -21,4 +21,8 @@ class Binary {
 
         return ipAddr;
     }
+    public static function ReadPort(inp:BytesInput):Int {
+        inp.bigEndian = true;
+        return inp.readUInt16();
+    }
 }

@@ -1,4 +1,5 @@
 package handle;
+import hl.UI16;
 import haxe.Int64;
 import haxe.io.Output;
 import haxe.io.BytesInput;
@@ -6,6 +7,7 @@ import haxe.io.BytesOutput;
 import haxe.io.Bytes;
 using utils.Logger;
 using src.PacketSender;
+using src.Server;
 class OpenConnectRequest1 {
     private var ID_PACKET = 0x05;
     private var buffer:Bytes;
@@ -14,6 +16,7 @@ class OpenConnectRequest1 {
     private var Packet:PacketSender;
     private var Portocol:Int;
     public function new(buffer:Bytes) {
+        this.buffer = Bytes.alloc(1024);
         this.buffer = buffer;
         Packet = new PacketSender();
     }
@@ -36,9 +39,9 @@ class OpenConnectRequest1 {
 
         Logger.Debug("Protocol Version:" + Portocol);
 
-        MTU = bytesinput.read(300);
+        bytesinput.position = 17;
 
-        Logger.Debug(MTU.length);
+        Logger.Debug(Server.numBytes + 46);
 
         encode();
     }
@@ -56,7 +59,7 @@ class OpenConnectRequest1 {
         output.bigEndian = false;
         output.writeByte(0x00);
         output.bigEndian = false;
-        output.writeUInt16(MTU.length + 1 + 28 + buffer.length);
+        output.writeUInt16(Server.numBytes + 46);
         data = output.getBytes(); 
         Packet.SendPacket(data,0,data.length);
     }

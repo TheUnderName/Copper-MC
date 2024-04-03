@@ -15,6 +15,7 @@ using utils.Logger;
 class Server {
     public static var UdpServer:UdpSocket;
     public static var ClientSender:Address;
+    public static var numBytes:Int;
     private var HostName:String;
     private var Ip:String;
     private var Port:Int;
@@ -37,11 +38,11 @@ class Server {
         }
     }
     private function HandlePackets():Void {
-        var buffersize:Int = 4096;
+        var buffersize:Int = 1500;
         ClientSender = new Address();
         var buffer:Bytes = Bytes.alloc(buffersize);
         try {
-            var numBytes:Int = UdpServer.readFrom(buffer, 0, buffersize, ClientSender); // read
+            numBytes = UdpServer.readFrom(buffer, 0, buffersize, ClientSender); // read
         } catch(e:Any) {
             trace(e);
         }

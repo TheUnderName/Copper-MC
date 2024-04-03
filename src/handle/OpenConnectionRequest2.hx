@@ -28,7 +28,6 @@ class OpenConnecetRequest2 {
     public function new(Buffer:Bytes) {
         this.Buffer = Buffer;
     }
-
     public function decode() {
         BytesInputs = new BytesInput(Buffer);
         PACKET_ID = BytesInputs.readByte();
@@ -41,11 +40,12 @@ class OpenConnecetRequest2 {
             Logger.Debug(AdrVersion);
             var IpADDR = BytesInputs.ReadAddreas();
             BytesInputs.bigEndian = true;
-            var AddreasPort:Int = BytesInputs.readUInt16();
+            var AddreasPort:Int = BytesInputs.ReadPort();
         } else {
             Logger.Debug("ipv6 not supported");
             return;
         }
+
 
         
     
