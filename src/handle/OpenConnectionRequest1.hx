@@ -12,6 +12,7 @@ class OpenConnectRequest1 {
     private var magicsubs:Bytes;
     private var MTU:Bytes;
     private var Packet:PacketSender;
+    private var Portocol:Int;
     public function new(buffer:Bytes) {
         this.buffer = buffer;
         Packet = new PacketSender();
@@ -21,24 +22,22 @@ class OpenConnectRequest1 {
         var bytes:Bytes = bytesinput.read(1024);
         
         Logger.Debug("Open Connection Request 1");
-        var packet:Bytes = bytes.sub(0,1);
-        Logger.Debug("Packet Id: " + "0x" + packet.toHex());
+        var packet:Int = bytesinput.readByte();
+        Logger.Debug("Packet Id: " + "0x" + packet);
+        bytesinput.bigEndian = false;
 
-        magicsubs = bytes.sub(1,16);
+        magicsubs = bytesinput.read(16);
         var RakNetMagic:String = magicsubs.toHex();
 
         Logger.Debug("RakNet Magic:" + RakNetMagic);
 
-        var protocol:Bytes = bytes.sub(17,1);
-        var timeinput:BytesInput = new BytesInput(protocol);
-        timeinput.bigEndian = false;
-        var protocolstr:Int = timeinput.readByte();
+        bytesinput.bigEndian = false;
 
-        Logger.Debug("Protocol Version:" + protocolstr);
+        Portocol = bytesinput.readByte();
 
-        var timeinput:BytesInput = new BytesInput(buffer);
+        Logger.Debug("Protocol Version:" + Portocol);
 
-        MTU = bytes.sub(18,300);
+        MTU = bytesinput.read(300);
 
         Logger.Debug(MTU.length + 46);
 
@@ -48,9 +47,9 @@ class OpenConnectRequest1 {
         var data:Bytes = Bytes.alloc(1024);
         var output:BytesOutput = new BytesOutput();
         output.bigEndian = false;
-        output.writeByte(0x06);
+        output.writeByte(0x06); // write replay 0x06
         output.bigEndian = false;
-        output.writeBytes(magicsubs,0,magicsubs.length);
+        output.write(magicsubs); // write magic
         output.bigEndian = true;
         var serverguid:Int64 = 254556555;
         output.writeInt32(serverguid.high);
