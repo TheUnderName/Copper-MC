@@ -19,7 +19,6 @@ class OpenConnectRequest1 {
     }
     public function decode() {
         var bytesinput:BytesInput = new BytesInput(buffer);
-        var bytes:Bytes = bytesinput.read(1024);
         
         Logger.Debug("Open Connection Request 1");
         var packet:Int = bytesinput.readByte();

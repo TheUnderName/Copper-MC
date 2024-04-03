@@ -1,4 +1,5 @@
 package src;
+import handle.OpenConnectionRequest2;
 import handle.ConnctedPing;
 import haxe.io.BytesInput;
 import sys.net.Address;
@@ -52,6 +53,10 @@ class Server {
             case 0x05: {
                 var openconnect = new OpenConnectRequest1(buffer);
                 openconnect.decode();
+            }
+            case 0x06: {
+                var openconnect2 = new OpenConnecetRequest2(buffer);
+                openconnect2.decode();
             }
             case 0x00: {
                 var connctedping = new ConnctedPing(buffer);
