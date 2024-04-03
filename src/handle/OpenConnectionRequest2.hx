@@ -7,7 +7,7 @@ using utils.Logger;
 using src.PacketSender;
 
 class OpenConnecetRequest2 {
-    private var PACKET_ID = 0x06;
+    private var PACKET_ID = 0x07;
     private var MAGIC:Bytes;
     private var Buffer:Bytes;
     private var MTU:Bytes;

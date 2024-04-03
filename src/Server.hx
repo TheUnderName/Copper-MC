@@ -29,7 +29,6 @@ class Server {
         UdpServer = new UdpSocket();
         UdpServer.bind(IpHost,Port);  
         Logger.Log("Socket installed");  
-        this.thread = Thread.create(this.Start);
     }
     public function Start():Void {  
         while(true) {
@@ -38,10 +37,14 @@ class Server {
         }
     }
     private function HandlePackets():Void {
-        var buffersize:Int = 1024;
+        var buffersize:Int = 4096;
         ClientSender = new Address();
         var buffer:Bytes = Bytes.alloc(buffersize);
-        var numBytes:Int = UdpServer.readFrom(buffer, 0, buffersize, ClientSender); // read
+        try {
+            var numBytes:Int = UdpServer.readFrom(buffer, 0, buffersize, ClientSender); // read
+        } catch(e:Any) {
+            trace(e);
+        }
         var bytesinput:BytesInput = new BytesInput(buffer);
         var packetid:Int = bytesinput.readByte();
         PacketSender.ClientAddreas = ClientSender;
@@ -54,7 +57,7 @@ class Server {
                 var openconnect = new OpenConnectRequest1(buffer);
                 openconnect.decode();
             }
-            case 0x06: {
+            case 0x07: {
                 var openconnect2 = new OpenConnecetRequest2(buffer);
                 openconnect2.decode();
             }

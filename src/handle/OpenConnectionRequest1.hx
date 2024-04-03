@@ -38,7 +38,7 @@ class OpenConnectRequest1 {
 
         MTU = bytesinput.read(300);
 
-        Logger.Debug(MTU.length + 46);
+        Logger.Debug(MTU.length);
 
         encode();
     }
@@ -56,7 +56,7 @@ class OpenConnectRequest1 {
         output.bigEndian = false;
         output.writeByte(0x00);
         output.bigEndian = false;
-        output.writeUInt16(MTU.length + 46);
+        output.writeUInt16(MTU.length + 1 + 28 + buffer.length);
         data = output.getBytes(); 
         Packet.SendPacket(data,0,data.length);
     }
