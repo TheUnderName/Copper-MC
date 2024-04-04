@@ -4,8 +4,11 @@ import sys.net.UdpSocket;
 import sys.net.Address;
 import haxe.io.*;
 using src.Server;
+using utils.Binary;
 using utils.Logger;
 class PacketSender {
+	public static var ClientAddress(default, null):{port:() -> Int, ip:() -> {toString:() -> String}};
+
     var ServerSocket:UdpSocket;
     public static var ClientAddreas:Address;
     public function new() {

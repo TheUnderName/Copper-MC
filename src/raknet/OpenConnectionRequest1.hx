@@ -1,4 +1,4 @@
-package handle;
+package raknet;
 import hl.UI16;
 import haxe.Int64;
 import haxe.io.Output;
@@ -26,14 +26,14 @@ class OpenConnectRequest1 {
         Logger.Debug("Open Connection Request 1");
         var packet:Int = bytesinput.readByte();
         Logger.Debug("Packet Id: " + "0x" + packet);
-        bytesinput.bigEndian = false;
+        bytesinput.bigEndian = true;
 
         magicsubs = bytesinput.read(16);
         var RakNetMagic:String = magicsubs.toHex();
 
         Logger.Debug("RakNet Magic:" + RakNetMagic);
 
-        bytesinput.bigEndian = false;
+        bytesinput.bigEndian = true;
 
         Portocol = bytesinput.readByte();
 
@@ -41,25 +41,21 @@ class OpenConnectRequest1 {
 
         bytesinput.position = 17;
 
-        Logger.Debug(Server.numBytes + 46);
+        Logger.Debug(Server.numBytes2);
 
         encode();
     }
     public function encode() {
         var data:Bytes = Bytes.alloc(1024);
         var output:BytesOutput = new BytesOutput();
-        output.bigEndian = false;
-        output.writeByte(0x06); // write replay 0x06
-        output.bigEndian = false;
-        output.write(magicsubs); // write magic
         output.bigEndian = true;
+        output.writeByte(0x06); // write replay 0x06
+        output.write(magicsubs); // write magic
         var serverguid:Int64 = 254556555;
         output.writeInt32(serverguid.high);
         output.writeInt32(serverguid.low);
-        output.bigEndian = false;
         output.writeByte(0x00);
-        output.bigEndian = false;
-        output.writeUInt16(Server.numBytes + 46);
+        output.writeUInt16(Server.numBytes2);
         data = output.getBytes(); 
         Packet.SendPacket(data,0,data.length);
     }
